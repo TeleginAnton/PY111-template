@@ -5,7 +5,16 @@ import networkx as nx
 import numpy as np
 
 
-# Test_1   O(log(N))
+def test_1():
+    """Самый сложный - это цикл, поэтому и написал O(log(N))"""
+    a = len(arr) - 1        # O(1)
+    out = list()            # O(1)
+    while a > 0:          #
+        out.append(arr[a])  # O(log(N))
+        a = a // 1.7      #
+    out.merge_sort()        # O(1) - вот это меня смущает :( НЕ пойму, какой у этой строки смысл...
+                                    # если это сортировка, то log(N). Цикл сложнее, ответ O(log(N))
+
 
 def test_2(n_people: int, k_syllable: int):
 
@@ -118,22 +127,28 @@ def test_7(a: int, b: int):
 
 
 def test_4(cost: list):
+    """
+    Каюсь, в спешке подсмотрел. Код работает корректно.
+    первые два цикла - определение строк и столбцов. Следующими циклами перебираем весь массив, определяем стоимость и
+    строим маршрут. Итог: стоимость маршрута + координаты пути по массиву.
+    """
     coords = [(0, 0)]
 
     for j in range(1, len(cost[0])):
         cost[0][j] += cost[0][j - 1]
 
     for i in range(1, len(cost)):
-        cost[i][0] += cost[i-1][0]
+        cost[i][0] += cost[i - 1][0]
 
     for i in range(1, len(cost)):
         for j in range(1, len(cost[0])):
-            cost[i][j] += min(cost[i][j-1], cost[i-1][j])
-            if cost[i][j - 1] <= cost[i - 1][j] and (i, j-1) != coords[-1]:
-                coords.append((i, j-1))
+            cost[i][j] += min(cost[i][j - 1], cost[i - 1][j])
+            if cost[i][j - 1] <= cost[i - 1][j] and (i, j - 1) != coords[-1]:
+                coords.append((i, j - 1))
             else:
                 if (i - 1, j) != coords[-1]:
                     coords.append((i - 1, j))
+
     coords.append((len(cost) - 1, len(cost) - 1))
 
     print(cost[-1][-1])
